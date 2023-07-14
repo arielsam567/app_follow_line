@@ -19,26 +19,23 @@ class HomePage extends StatelessWidget {
       child: Consumer<HomeController>(
         builder: (context, controller, _) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Follow Line',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
             floatingActionButton: ExpandableFab(
               distance: 80,
               children: [
                 ActionButton(
                   onPressed: () => controller.sendValues(),
                   icon: const Icon(Icons.send),
+                  active: controller.bt.isConnected,
                 ),
                 ActionButton(
                   onPressed: () => controller.start(),
                   icon: const Icon(Icons.play_arrow_rounded),
+                  active: controller.bt.isConnected,
                 ),
                 ActionButton(
                   onPressed: () => controller.saveStorageList(),
                   icon: const Icon(Icons.save),
+                  active: true,
                 ),
               ],
             ),

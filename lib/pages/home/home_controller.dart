@@ -53,6 +53,10 @@ class HomeController extends ChangeNotifier {
       showMessageError('Preencha todos os campos');
       return;
     }
+    if (!bt.isConnected) {
+      showMessageError('Bluetooth não conectado');
+      return;
+    }
 
     String textToSend = list.map((e) => '${e.key}:${e.value}').join('&');
     textToSend += ';';

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:app_follow_line/config/themes/colors.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -187,12 +188,14 @@ class _ExpandingActionButton extends StatelessWidget {
 class ActionButton extends StatelessWidget {
   const ActionButton({
     required this.icon,
+    required this.active,
     super.key,
     this.onPressed,
   });
 
   final VoidCallback? onPressed;
   final Widget icon;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +205,7 @@ class ActionButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.antiAlias,
-      color: theme.colorScheme.secondary,
+      color: active ? theme.colorScheme.secondary : MyColors.lightGrey,
       elevation: 4,
       child: IconButton(
         onPressed: onPressed,

@@ -59,7 +59,7 @@ class TextFieldHome extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 40,
             width: 30,
             child: PopupMenuButton<String>(
