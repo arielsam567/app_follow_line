@@ -21,7 +21,7 @@ dependencies:
   flutter_bluetooth_serial: ^0.4.0
   vibration: ^1.8.1
   flutter_blue_plus: ^1.5.2
-  bluetooth_enable_fork: ^0.1.6
+  permission_handler: ^10.4.3
 
 
 dev_dependencies:

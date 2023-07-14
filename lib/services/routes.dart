@@ -30,4 +30,9 @@ class Routes {
       (route) => enableBack,
     );
   }
+
+  static void pop() {
+    debugPrint('POP');
+    Navigator.of(Routes.navigator.currentContext!).pop();
+  }
 }

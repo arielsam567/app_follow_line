@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:app_follow_line/models/bluetooth_model.dart';
-import 'package:bluetooth_enable_fork/bluetooth_enable_fork.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vibration/vibration.dart';
 
 class BluetoothProvider extends ChangeNotifier {
@@ -19,7 +20,7 @@ class BluetoothProvider extends ChangeNotifier {
     if (devices.isNotEmpty) {
       devices.clear();
     }
-    _startDiscovery();
+    await _startDiscovery();
   }
 
   @override
@@ -29,22 +30,24 @@ class BluetoothProvider extends ChangeNotifier {
   }
 
   Future<bool> checkBluetoothStatus() async {
-    bool isEnable = false;
-    BluetoothEnable.enableBluetooth.then((result) {
-      debugPrint('result $result');
-      if (result == 'true') {
-        isEnable = true;
-      }
-    });
-    return isEnable;
+    final PermissionStatus status = await Permission.bluetooth.status;
+
+    if (status.isDenied) {
+      await Permission.bluetooth.request();
+    }
+
+    final FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+
+    return flutterBlue.isOn;
   }
 
   Future<void> _startDiscovery() async {
     try {
-      print('start discovery');
+      await checkBluetoothStatus();
+      debugPrint('start discovery');
       await FlutterBluetoothSerial.instance.getBondedDevices().then((bondedDevices) {
         for (final element in bondedDevices) {
-          print('element.name ${element.name}');
+          debugPrint('element.name ${element.name}');
           devices.add(
             BluetoothModel(
               name: element.name ?? '',
@@ -52,7 +55,7 @@ class BluetoothProvider extends ChangeNotifier {
             ),
           );
         }
-        print('devices ${devices.length}');
+        debugPrint('devices ${devices.length}');
 
         loading = false;
         notifyListeners();
@@ -93,20 +96,21 @@ class BluetoothProvider extends ChangeNotifier {
 
   Future<bool> connectDevice(String address) async {
     try {
+      print('address $address');
       connection = await BluetoothConnection.toAddress(address);
 
       connection!.input!.listen((data) {
         //print('Data incoming a: $data');
 
-        print('Data incoming: ${ascii.decode(data)}');
+        debugPrint('Data incoming: ${ascii.decode(data)}');
         connection!.output.add(data); // Sending data
 
         if (ascii.decode(data).contains('!')) {
           connection!.finish(); // Closing connection
-          print('Disconnecting by local host');
+          debugPrint('Disconnecting by local host');
         }
       }).onDone(() {
-        print('Disconnected by remote request');
+        debugPrint('Disconnected by remote request');
         disconnect();
       });
 
@@ -122,9 +126,9 @@ class BluetoothProvider extends ChangeNotifier {
   }
 
   Future<void> done(String comando) async {
-    print('AFF ${DateTime.now()}');
+    debugPrint('AFF ${DateTime.now()}');
     connection!.output.add(ascii.encode(comando));
     await connection!.output.allSent;
-    print('AFF ${DateTime.now()}');
+    debugPrint('AFF ${DateTime.now()}');
   }
 }

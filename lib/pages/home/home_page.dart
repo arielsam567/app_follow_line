@@ -1,7 +1,7 @@
 import 'package:app_follow_line/config/themes/colors.dart';
-import 'package:app_follow_line/models/bluetooth_model.dart';
 import 'package:app_follow_line/pages/home/home_controller.dart';
 import 'package:app_follow_line/provider/bt_provider.dart';
+import 'package:app_follow_line/widgets/bt.dart';
 import 'package:app_follow_line/widgets/card_saved_items.dart';
 import 'package:app_follow_line/widgets/floating.dart';
 import 'package:app_follow_line/widgets/text_field_home.dart';
@@ -52,9 +52,9 @@ class HomePage extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all(MyColors.success),
                       ),
                       onPressed: () => showModalToConnectBluetooth(controller, context),
-                      child: const Text(
-                        'CONECTAR',
-                        style: TextStyle(color: Colors.white),
+                      child: Text(
+                        controller.bt.isConnected ? 'DESCONECTAR' : 'CONECTAR',
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
@@ -129,110 +129,12 @@ class HomePage extends StatelessWidget {
   }
 
   void showModalToConnectBluetooth(HomeController controller, context) {
-    controller.bt.init();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       builder: (context) {
-        return ConnectBluetooth(controller: controller);
+        return ConnectBluetooth(ct: controller);
       },
-    );
-  }
-}
-
-class ConnectBluetooth extends StatefulWidget {
-  final HomeController controller;
-  const ConnectBluetooth({required this.controller, super.key});
-
-  @override
-  State<ConnectBluetooth> createState() => _ConnectBluetoothState();
-}
-
-class _ConnectBluetoothState extends State<ConnectBluetooth> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 18.0),
-          child: Center(
-            child: Text(
-              'DEVICES',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        if (widget.controller.bt.loading) ...[
-          const SizedBox(height: 100),
-          const Center(
-            child: CircularProgressIndicator(),
-          )
-        ] else if (widget.controller.bt.devices.isNotEmpty) ...[
-          ListView.builder(
-              itemCount: widget.controller.bt.devices.length,
-              itemBuilder: (context, index) {
-                return DeviceItem(
-                  device: widget.controller.bt.devices[index],
-                  connected:
-                      widget.controller.bt.devices[index].id == widget.controller.bt.idConnected,
-                  onTap: () async {
-                    if (widget.controller.bt.isConnected == false) {
-                      print('CONNECTANDO');
-                      await widget.controller.bt
-                          .connectDevice(widget.controller.bt.devices[index].id);
-                      print('CONNECTADO');
-                    } else {
-                      print('DESCONNECTANDO');
-                      await widget.controller.bt.disconnect();
-                      print('DESCONNECTADO');
-                    }
-                    setState(() {});
-                  },
-                );
-              })
-        ]
-      ],
-    );
-  }
-}
-
-class DeviceItem extends StatefulWidget {
-  final BluetoothModel device;
-  final bool connected;
-  final Function onTap;
-  const DeviceItem({
-    required this.device,
-    required this.connected,
-    required this.onTap,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<DeviceItem> createState() => _DeviceItemState();
-}
-
-class _DeviceItemState extends State<DeviceItem> {
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        widget.onTap();
-      },
-      title: Text(
-        widget.device.name,
-        style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        widget.device.id,
-        style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 14),
-      ),
-      trailing: Text(
-        widget.connected ? 'Conectado' : '',
-        style: const TextStyle(color: MyColors.success, fontWeight: FontWeight.w400, fontSize: 14),
-      ),
     );
   }
 }

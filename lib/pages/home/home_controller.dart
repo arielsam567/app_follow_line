@@ -91,10 +91,6 @@ class HomeController extends ChangeNotifier {
     showMessageError('Não implementado');
   }
 
-  void connectBluetooth() {
-    bt.init();
-  }
-
   void removeSavedList(List<TextFieldModel> e) {
     savedList.remove(e);
     _storage.removeList(e);
