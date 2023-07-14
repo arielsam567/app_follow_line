@@ -22,4 +22,5 @@ O Follow Line App é um aplicativo desenvolvido em Flutter que permite o control
 git clone https://github.com/wickedbotz/follow-line-app.git
 ```
 
-![Tela inicial do app](assets/img/scr.png)
+<img src="assets/img/scr.png" alt="Tela inicial do app" width="300" height="200" />
+
