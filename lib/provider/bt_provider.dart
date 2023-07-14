@@ -142,10 +142,8 @@ class BluetoothProvider extends ChangeNotifier {
   }
 
   Future<void> sendString(String comando) async {
-    debugPrint('AFF ${DateTime.now()}');
     connection!.output.add(ascii.encode(comando));
     await connection!.output.allSent;
-    debugPrint('AFF ${DateTime.now()}');
   }
 
   bool hasLastConnected() {

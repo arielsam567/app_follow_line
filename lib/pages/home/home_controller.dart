@@ -48,7 +48,7 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void sendValues() {
+  Future<void> sendValues() async {
     if (!validateFields()) {
       showMessageError('Preencha todos os campos');
       return;
@@ -58,8 +58,9 @@ class HomeController extends ChangeNotifier {
       return;
     }
 
-    String textToSend = list.map((e) => '${e.key}:${e.value}').join('&');
-    textToSend += ';';
+    String textToSend = ';';
+    textToSend += list.map((e) => '${e.key}:${e.value}').join('&');
+    textToSend += '&g:g;';
     bt.sendString(textToSend);
     debugPrint('TEXT TO SEND: $textToSend');
   }
