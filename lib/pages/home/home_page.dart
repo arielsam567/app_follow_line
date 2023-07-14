@@ -43,20 +43,57 @@ class HomePage extends StatelessWidget {
               ],
             ),
             body: SingleChildScrollView(
+              controller: controller.scrollController,
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  Center(
-                    child: FilledButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(MyColors.success),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: FilledButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              controller.bt.isConnected ? MyColors.yellow : MyColors.success,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (controller.bt.isConnected) {
+                              controller.bt.disconnect();
+                            } else {
+                              showModalToConnectBluetooth(controller, context);
+                            }
+                          },
+                          child: Text(
+                            controller.bt.isConnected ? 'DESCONECTAR' : 'CONECTAR',
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                      onPressed: () => showModalToConnectBluetooth(controller, context),
-                      child: Text(
-                        controller.bt.isConnected ? 'DESCONECTAR' : 'CONECTAR',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
+                      if (controller.bt.hasLastConnected() && !controller.bt.isConnected) ...[
+                        const SizedBox(width: 20),
+                        SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: AnimatedRotation(
+                            duration: const Duration(seconds: 5),
+                            turns: controller.bt.connecting ? 8 : 0,
+                            child: Material(
+                              shape: const CircleBorder(),
+                              color: controller.bt.connecting ? Colors.black12 : Colors.black,
+                              child: IconButton(
+                                padding: const EdgeInsets.all(0),
+                                onPressed: () => controller.bt.connectLastDevice(),
+                                icon: const Icon(
+                                  Icons.refresh,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ]
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Container(
@@ -128,8 +165,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void showModalToConnectBluetooth(HomeController controller, context) {
-    showModalBottomSheet(
+  Future<void> showModalToConnectBluetooth(HomeController controller, context) async {
+    await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       builder: (context) {

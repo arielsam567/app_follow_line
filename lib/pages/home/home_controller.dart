@@ -3,15 +3,27 @@ import 'package:app_follow_line/provider/bt_provider.dart';
 import 'package:app_follow_line/services/storage.dart';
 import 'package:app_follow_line/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomeController extends ChangeNotifier {
   final List<TextFieldModel> list = [];
   final List<List<TextFieldModel>> savedList = [];
   final Storage _storage = Storage();
   final BluetoothProvider bt;
+  final ScrollController scrollController = ScrollController();
 
   HomeController(this.bt) {
     _init();
+    scrollController.addListener(() {
+      //close keyboard when scroll
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bt.dispose();
   }
 
   void _init() {
@@ -44,6 +56,7 @@ class HomeController extends ChangeNotifier {
 
     String textToSend = list.map((e) => '${e.key}:${e.value}').join('&');
     textToSend += ';';
+    bt.sendString(textToSend);
     debugPrint('TEXT TO SEND: $textToSend');
   }
 
@@ -86,9 +99,8 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void start() {
-    //TODO ENVIAR COMANDO PARA COMECAR
-    showMessageError('Não implementado');
+  Future<void> start() async {
+    await bt.sendString('s');
   }
 
   void removeSavedList(List<TextFieldModel> e) {

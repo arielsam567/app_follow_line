@@ -70,7 +70,7 @@ class _ConnectBluetoothState extends State<ConnectBluetooth> {
   }
 
   Future<void> init() async {
-    await widget.ct.bt.init();
+    await widget.ct.bt.searchDevices();
 
     setState(() {});
   }

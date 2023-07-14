@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:app_follow_line/models/bluetooth_model.dart';
+import 'package:app_follow_line/services/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -15,11 +16,15 @@ class BluetoothProvider extends ChangeNotifier {
   bool loading = true;
   List<BluetoothModel> devices = [];
   StreamSubscription? streamAce;
+  String? lastDevice;
+  final Storage _storage = Storage();
+  bool connecting = false;
 
-  Future<void> init() async {
-    if (devices.isNotEmpty) {
-      devices.clear();
-    }
+  BluetoothProvider() {
+    _init();
+  }
+
+  Future<void> searchDevices() async {
     await _startDiscovery();
   }
 
@@ -43,6 +48,9 @@ class BluetoothProvider extends ChangeNotifier {
 
   Future<void> _startDiscovery() async {
     try {
+      if (devices.isNotEmpty) {
+        devices.clear();
+      }
       await checkBluetoothStatus();
       debugPrint('start discovery');
       await FlutterBluetoothSerial.instance.getBondedDevices().then((bondedDevices) {
@@ -96,11 +104,13 @@ class BluetoothProvider extends ChangeNotifier {
 
   Future<bool> connectDevice(String address) async {
     try {
-      print('address $address');
+      saveLastConnected(address);
+      connecting = true;
+      notifyListeners();
       connection = await BluetoothConnection.toAddress(address);
 
       connection!.input!.listen((data) {
-        //print('Data incoming a: $data');
+        debugPrint('Data incoming a: $data');
 
         debugPrint('Data incoming: ${ascii.decode(data)}');
         connection!.output.add(data); // Sending data
@@ -115,20 +125,42 @@ class BluetoothProvider extends ChangeNotifier {
       });
 
       _setAsConnected(address);
+      connecting = false;
+      notifyListeners();
 
       return true;
     } catch (exception) {
-      print('ERROR $exception)');
+      debugPrint('ERROR $exception)');
 
       disconnect();
+      connecting = false;
+      notifyListeners();
       return false;
     }
   }
 
-  Future<void> done(String comando) async {
+  Future<void> sendString(String comando) async {
     debugPrint('AFF ${DateTime.now()}');
     connection!.output.add(ascii.encode(comando));
     await connection!.output.allSent;
     debugPrint('AFF ${DateTime.now()}');
+  }
+
+  bool hasLastConnected() {
+    return lastDevice != null;
+  }
+
+  Future<void> saveLastConnected(String device) async {
+    lastDevice = device;
+    _storage.saveLastConnected(device);
+  }
+
+  void _init() {
+    lastDevice = _storage.getLastConnected();
+    notifyListeners();
+  }
+
+  void connectLastDevice() {
+    connectDevice(lastDevice!);
   }
 }

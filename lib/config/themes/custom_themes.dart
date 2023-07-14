@@ -3,6 +3,23 @@ import 'package:flutter/material.dart';
 
 class CustomThemes {
   final defaultTheme = ThemeData(
+    cardColor: MyColors.white,
+    popupMenuTheme: PopupMenuThemeData(
+      shadowColor: MyColors.black,
+      surfaceTintColor: MyColors.white,
+      color: MyColors.white,
+      elevation: 12,
+      labelTextStyle: MaterialStateProperty.all(
+        const TextStyle(
+          color: MyColors.black,
+          fontSize: 14,
+        ),
+      ),
+      textStyle: const TextStyle(
+        color: MyColors.black,
+        fontSize: 14,
+      ),
+    ),
     useMaterial3: true,
     scaffoldBackgroundColor: MyColors.white,
     dividerColor: Colors.transparent,
@@ -38,6 +55,7 @@ class CustomThemes {
       hintStyle: TextStyle(color: Colors.black38, fontSize: 16.0),
     ),
     appBarTheme: const AppBarTheme(
+      backgroundColor: MyColors.yellow,
       iconTheme: IconThemeData(
         color: MyColors.blue,
       ),
@@ -57,13 +75,13 @@ class CustomThemes {
       onError: MyColors.error,
       error: MyColors.error,
       brightness: Brightness.light,
-      onPrimary: Colors.red,
+      onPrimary: Colors.amber,
       primary: Colors.black,
-      background: Colors.red,
+      background: Colors.amber,
       onSurface: Colors.amber,
       //APPBAR BACKGROUND
-      surface: Colors.red,
-      secondary: Colors.red,
+      surface: Colors.amber,
+      secondary: Colors.amber,
     ),
     textTheme: const TextTheme(
       //BODY

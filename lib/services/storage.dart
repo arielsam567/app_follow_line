@@ -47,4 +47,12 @@ class Storage {
     listString.remove(str);
     _sharedPreferences?.setStringList('list', listString);
   }
+
+  void saveLastConnected(String s) {
+    _sharedPreferences!.setString('lastConnected', s);
+  }
+
+  String? getLastConnected() {
+    return _sharedPreferences!.getString('lastConnected');
+  }
 }
