@@ -11,4 +11,5 @@ class MyColors {
   static const error = Colors.red;
   static const blue = Colors.blueAccent;
   static const yellow = Colors.amber;
+  static const orange = Colors.orange;
 }

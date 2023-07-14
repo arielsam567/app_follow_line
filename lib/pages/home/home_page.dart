@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
                           },
                           child: Text(
                             controller.bt.isConnected ? 'DESCONECTAR' : 'CONECTAR',
-                            style: const TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ),
                       ),
@@ -160,7 +160,7 @@ class HomePage extends StatelessWidget {
                       const SizedBox(width: 20),
                       FilledButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(MyColors.blue),
+                          backgroundColor: MaterialStateProperty.all(MyColors.orange),
                         ),
                         onPressed: () {
                           controller.bt.sendString('a');
