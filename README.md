@@ -1,16 +1,22 @@
-# app_follow_line
+# Follow Line App - Controle Bluetooth para Arduino
 
-A new Flutter project.
+![Flutter Version](https://img.shields.io/badge/flutter-v3.10.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-## Getting Started
+O Follow Line App é um aplicativo desenvolvido em Flutter que permite o controle de um robô através de comandos enviados via Bluetooth para um Arduino. Ele foi desenvolvido pela equipe de robótica Wickedbotz como parte de um projeto de seguidor de linha.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Pré-requisitos
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter SDK v3.10.0 ou superior.
+- Dispositivo físico Android
+- Arduino com modulo Bluetooth HC-05
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Instalação e Configuração
+
+1. Certifique-se de ter o Flutter SDK instalado em sua máquina. Para obter instruções de instalação, consulte a documentação oficial do Flutter: [Flutter - Get Started](https://flutter.dev/docs/get-started).
+
+2. Clone este repositório para o seu ambiente local:
+
+```bash
+git clone https://github.com/wickedbotz/follow-line-app.git
