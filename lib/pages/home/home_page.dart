@@ -157,6 +157,19 @@ class HomePage extends StatelessWidget {
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
+                      const SizedBox(width: 20),
+                      FilledButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(MyColors.blue),
+                        ),
+                        onPressed: () {
+                          controller.bt.sendString('a');
+                        },
+                        child: const Text(
+                          'A',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ],
                   ),
                   Container(
