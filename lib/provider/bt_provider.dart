@@ -19,6 +19,8 @@ class BluetoothProvider extends ChangeNotifier {
   String? lastDevice;
   final Storage _storage = Storage();
   bool connecting = false;
+  String aux = '';
+  String lastAux = '';
 
   BluetoothProvider() {
     _init();
@@ -110,13 +112,13 @@ class BluetoothProvider extends ChangeNotifier {
       connection = await BluetoothConnection.toAddress(address);
 
       connection!.input!.listen((data) {
-        debugPrint('Data incoming a: $data');
-
+        startToReceiveData(1000);
         debugPrint('Data incoming: ${ascii.decode(data)}');
-        connection!.output.add(data); // Sending data
+        aux += ascii.decode(data);
+        //connection!.output.add(data); // Sending data
 
         if (ascii.decode(data).contains('!')) {
-          connection!.finish(); // Closing connection
+          connection!.finish();
           debugPrint('Disconnecting by local host');
         }
       }).onDone(() {
@@ -163,4 +165,20 @@ class BluetoothProvider extends ChangeNotifier {
   void connectLastDevice() {
     connectDevice(lastDevice!);
   }
+
+  void startToReceiveData(int milliseconds) {
+    if (aux.isEmpty) {
+      Future.delayed(
+        Duration(milliseconds: milliseconds),
+        () {
+          debugPrint('RECEIVED $aux');
+          lastAux = aux;
+          notifyListeners();
+          aux = '';
+        },
+      );
+    }
+  }
+
+  String get lastData => lastAux;
 }

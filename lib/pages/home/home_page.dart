@@ -47,6 +47,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
+                  //BOTOES  CONECTAR BT
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -96,6 +97,7 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  //LISTA DE TEXTFIELDS
                   Container(
                     width: MediaQuery.sizeOf(context).width,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -120,6 +122,8 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                  //DIVIDER
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                     child: Divider(
@@ -127,6 +131,60 @@ class HomePage extends StatelessWidget {
                       height: 1,
                     ),
                   ),
+                  //BOTOES COMANDO
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FilledButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(MyColors.error),
+                        ),
+                        onPressed: () {
+                          controller.bt.sendString('y');
+                        },
+                        child: const Text(
+                          'Y',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      FilledButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(MyColors.blue),
+                        ),
+                        onPressed: () {
+                          controller.bt.sendString('x');
+                        },
+                        child: const Text(
+                          'X',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    padding: const EdgeInsets.all(20),
+                    color: Colors.black,
+                    width: MediaQuery.sizeOf(context).width,
+                    child: Center(
+                      child: Text(
+                        controller.bt.lastAux,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ),
+                  ),
+
+                  //DIVIDER
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: Divider(
+                      color: Colors.black,
+                      height: 1,
+                    ),
+                  ),
+                  //TEXT PARAMETROS SALVOS
                   const Padding(
                     padding: EdgeInsets.only(bottom: 12.0),
                     child: Text(
