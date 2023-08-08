@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:app_follow_line/models/bluetooth_model.dart';
 import 'package:app_follow_line/services/storage.dart';
+import 'package:app_follow_line/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -166,15 +167,13 @@ class BluetoothProvider extends ChangeNotifier {
 
   void startToReceiveData(int milliseconds) {
     if (aux.isEmpty) {
-      Future.delayed(
-        Duration(milliseconds: milliseconds),
-        () {
-          debugPrint('RECEIVED $aux');
-          lastAux = aux;
-          notifyListeners();
-          aux = '';
-        },
-      );
+      Future.delayed(Duration(milliseconds: milliseconds), () {
+        debugPrint('RECEIVED $aux');
+        lastAux = aux;
+        showMessageError(lastAux);
+        notifyListeners();
+        aux = '';
+      });
     }
   }
 

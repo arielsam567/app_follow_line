@@ -1,19 +1,25 @@
-import 'package:app_follow_line/models/text_field.dart';
+import 'package:app_follow_line/config/assets.dart';
+import 'package:app_follow_line/config/themes/colors.dart';
+import 'package:app_follow_line/models/rele_model.dart';
 import 'package:app_follow_line/provider/bt_provider.dart';
-import 'package:app_follow_line/services/storage.dart';
 import 'package:app_follow_line/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class HomeController extends ChangeNotifier {
-  final List<TextFieldModel> list = [];
-  final List<List<TextFieldModel>> savedList = [];
-  final Storage _storage = Storage();
+  final List<ReleModel> reles = [];
+  late ReleModel rele;
   final BluetoothProvider bt;
   final ScrollController scrollController = ScrollController();
+  int mode = 1;
+  int dias = 0;
+  int horas = 0;
+  int minutos = 0;
+  int segundos = 0;
+  int milisegundos = 0;
 
   HomeController(this.bt) {
-    _init();
+    initReles();
     scrollController.addListener(() {
       //close keyboard when scroll
       SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -26,97 +32,73 @@ class HomeController extends ChangeNotifier {
     bt.dispose();
   }
 
-  void _init() {
-    if (list.isEmpty) {
-      addTextField();
-    }
-    getFromMemory();
-    if (savedList.isNotEmpty) {
-      list.clear();
-      list.addAll(savedList.last);
-    }
-    notifyListeners();
-  }
-
-  void getFromMemory() {
-    savedList.clear();
-    savedList.addAll(_storage.getFromMemory());
-  }
-
-  void addTextField() {
-    list.add(TextFieldModel());
-    notifyListeners();
-  }
-
   Future<void> sendValues() async {
-    if (!validateFields()) {
-      showMessageError('Preencha todos os campos');
-      return;
-    }
     if (!bt.isConnected) {
       showMessageError('Bluetooth não conectado');
       return;
     }
-
-    String textToSend = ';';
-    textToSend += list.map((e) => '${e.key}:${e.value}').join('&');
-    textToSend += '&g:g;';
+    final int tempo = getTimeInMilliseconds();
+    final String textToSend = 'modo:$mode&tempo:$tempo&g:g;';
     bt.sendString(textToSend);
     debugPrint('TEXT TO SEND: $textToSend');
   }
 
-  bool validateFields() {
-    for (final element in list) {
-      if (element.key.isEmpty || element.value.isEmpty) {
-        return false;
-      }
+  void setMode(int i) {
+    mode = i;
+    rele = reles[i - 1];
+    notifyListeners();
+  }
+
+  Color buttonColor(int i) {
+    if (mode == i) {
+      return MyColors.yellow;
+    } else {
+      return MyColors.lightGrey;
     }
-    return true;
   }
 
-  void saveStorageList() {
-    if (!validateFields()) {
-      showMessageError('Preencha todos os campos para salvar');
-      return;
+  void initReles() {
+    reles.add(
+      ReleModel(
+        title: 'Relé com retardo na energização',
+        url: Assets.onDelay,
+        model: 1,
+        time: 0,
+      ),
+    );
+    reles.add(
+      ReleModel(
+        title: 'Relé com retardo na desenergização',
+        url: Assets.offDelay,
+        model: 2,
+        time: 0,
+      ),
+    );
+    rele = reles[0];
+  }
+
+  void setTime(int time, String type) {
+    if (type == 'dia') {
+      dias = time;
+    } else if (type == 'hora') {
+      horas = time;
+    } else if (type == 'min') {
+      minutos = time;
+    } else if (type == 'seg') {
+      segundos = time;
+    } else if (type == 'miliseg') {
+      milisegundos = time;
     }
-    _storage.saveList(list);
-    getFromMemory();
-    showMessageSuccess('Salvo com sucesso');
     notifyListeners();
   }
 
-  Future<void> removeTextField(int index) async {
-    final List<TextFieldModel> aux = List.from(list);
-    aux.removeAt(index);
-    list.clear();
-    notifyListeners();
-    await Future.delayed(const Duration(milliseconds: 100));
-    list.addAll(aux);
-    notifyListeners();
-  }
-
-  Function? getFunctionAddTextField(int index) {
-    return list.length == index + 1 ? () => addTextField() : null;
-  }
-
-  void updateLock(int index) {
-    list[index].blocked = !list[index].blocked;
-    notifyListeners();
-  }
-
-  Future<void> start() async {
-    await bt.sendString('s');
-  }
-
-  void removeSavedList(List<TextFieldModel> e) {
-    savedList.remove(e);
-    _storage.removeList(e);
-    notifyListeners();
-  }
-
-  void selectList(List<TextFieldModel> e) {
-    list.clear();
-    list.addAll(e);
-    notifyListeners();
+  int getTimeInMilliseconds() {
+    int time = 0;
+    time += dias * 86400000;
+    time += horas * 3600000;
+    time += minutos * 60000;
+    time += segundos * 1000;
+    time += milisegundos;
+    return time;
   }
 }

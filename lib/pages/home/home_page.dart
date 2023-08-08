@@ -5,6 +5,7 @@ import 'package:app_follow_line/provider/bt_provider.dart';
 import 'package:app_follow_line/widgets/bt.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:wheel_chooser/wheel_chooser.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -82,9 +83,95 @@ class HomePage extends StatelessWidget {
                   Card(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      height: 250,
-                      child: Row(
-                        children: [],
+                      child: Column(
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 12.0),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 20),
+                                  FilledButton(
+                                    style: ButtonStyle(
+                                      padding: MaterialStateProperty.all(
+                                        const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 16,
+                                        ),
+                                      ),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(controller.buttonColor(1)),
+                                    ),
+                                    onPressed: () => controller.setMode(1),
+                                    child: const Text(
+                                      'RETARDO NA\nENERGIZAÇÃO',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  FilledButton(
+                                    style: ButtonStyle(
+                                      padding: MaterialStateProperty.all(
+                                        const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 16,
+                                        ),
+                                      ),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(controller.buttonColor(2)),
+                                    ),
+                                    onPressed: () => controller.setMode(2),
+                                    child: const Text(
+                                      'RETARDO NA\nDESERGIZAÇÃO',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            controller.rele.title,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Image.asset(
+                            controller.rele.url,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              scrollWidget(controller, 'dia', 999),
+                              scrollWidget(controller, 'hora', 23),
+                              scrollWidget(controller, 'min', 59),
+                              scrollWidget(controller, 'seg', 59),
+                              scrollWidget(controller, 'miliseg', 999, step: 100),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Center(
+                            child: FilledButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(MyColors.green),
+                              ),
+                              onPressed: () => controller.sendValues(),
+                              child: const Text(
+                                'Salvar',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
                   ),
@@ -95,9 +182,7 @@ class HomePage extends StatelessWidget {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(MyColors.blue),
                       ),
-                      onPressed: () {
-                        controller.bt.sendString('x');
-                      },
+                      onPressed: () => controller.bt.sendString('x'),
                       child: const Text(
                         'MUDAR ESTADO',
                         style: TextStyle(color: Colors.white),
@@ -109,6 +194,60 @@ class HomePage extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget scrollWidget(HomeController controller, String title, int maxValue, {step = 1}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black12),
+            ),
+            height: 100,
+            width: 70,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 30,
+                  left: 10,
+                  child: Container(
+                    width: 50,
+                    height: 1.3,
+                    color: Colors.black,
+                  ),
+                ),
+                Positioned(
+                  bottom: 30,
+                  left: 10,
+                  child: Container(
+                    width: 50,
+                    height: 1.3,
+                    color: Colors.black,
+                  ),
+                ),
+                WheelChooser.integer(
+                  onValueChanged: (i) => controller.setTime(i, title),
+                  maxValue: maxValue,
+                  minValue: 0,
+                  step: step,
+                  isInfinite: true,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

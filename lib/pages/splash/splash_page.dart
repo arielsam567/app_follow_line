@@ -18,9 +18,9 @@ class _SplashPageState extends State<SplashPage> {
       child: Consumer<SplashController>(
         builder: (context, controller, _) {
           return Scaffold(
-            bottomNavigationBar: Container(
+            bottomNavigationBar: const SizedBox(
               height: 50,
-              child: const Column(
+              child: Column(
                 children: [
                   Center(
                     child: Text(

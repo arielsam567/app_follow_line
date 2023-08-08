@@ -23,7 +23,7 @@ dependencies:
   flutter_blue_plus: ^1.5.2
   permission_handler: ^10.4.3
   flutter_material_pickers: ^3.6.0
-
+  wheel_chooser: ^1.1.2
 
 dev_dependencies:
   flutter_test:
