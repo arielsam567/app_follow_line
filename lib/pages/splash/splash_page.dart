@@ -18,21 +18,40 @@ class _SplashPageState extends State<SplashPage> {
       child: Consumer<SplashController>(
         builder: (context, controller, _) {
           return Scaffold(
+            bottomNavigationBar: Container(
+              height: 50,
+              child: const Column(
+                children: [
+                  Center(
+                    child: Text(
+                      'Criado por: Ariel Sam',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'TCC - Relé multifuncional programável via Bluetooth',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(Assets.wicked),
-                const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
+                Center(
+                  child: Image.asset(
+                    Assets.ifsc,
+                    width: 150,
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: Text('Carregando...'
-                      // style: Theme
-                      ),
-                )
               ],
             ),
           );

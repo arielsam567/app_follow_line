@@ -55,16 +55,16 @@ class CustomThemes {
       hintStyle: TextStyle(color: Colors.black38, fontSize: 16.0),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: MyColors.yellow,
+      backgroundColor: MyColors.green,
       iconTheme: IconThemeData(
-        color: MyColors.blue,
+        color: MyColors.white,
       ),
       actionsIconTheme: IconThemeData(),
       centerTitle: true,
       titleTextStyle: TextStyle(
-        fontSize: 20.0,
+        fontSize: 24.0,
         fontWeight: FontWeight.w500,
-        color: MyColors.black,
+        color: MyColors.white,
       ),
       elevation: 0,
     ),
@@ -132,6 +132,16 @@ class CustomThemes {
         fontSize: 13,
         fontWeight: FontWeight.w500,
         color: MyColors.black,
+      ),
+    ),
+    cardTheme: const CardTheme(
+      surfaceTintColor: MyColors.white,
+      shadowColor: MyColors.black,
+      color: Color(0xfffcfcfc),
+      elevation: 8,
+      margin: EdgeInsets.all(20),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
       ),
     ),
   );

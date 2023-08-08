@@ -22,6 +22,7 @@ dependencies:
   vibration: ^1.8.1
   flutter_blue_plus: ^1.5.2
   permission_handler: ^10.4.3
+  flutter_material_pickers: ^3.6.0
 
 
 dev_dependencies:
