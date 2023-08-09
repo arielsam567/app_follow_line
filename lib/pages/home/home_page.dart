@@ -34,9 +34,7 @@ class HomePage extends StatelessWidget {
                       Center(
                         child: FilledButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              controller.bt.isConnected ? MyColors.yellow : MyColors.success,
-                            ),
+                            backgroundColor: MaterialStateProperty.all(getButtonColor(controller)),
                           ),
                           onPressed: () {
                             if (controller.bt.isConnected) {
@@ -46,25 +44,26 @@ class HomePage extends StatelessWidget {
                             }
                           },
                           child: Text(
-                            controller.bt.isConnected ? Strings.desconectar : Strings.conectar,
+                            getStringButton(controller),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: controller.bt.isConnected ? Colors.black : Colors.white,
+                              fontSize: 16,
+                              color: getTextButtonColor(controller),
                             ),
                           ),
                         ),
                       ),
-                      if (controller.bt.hasLastConnected() && !controller.bt.isConnected) ...[
+                      if (hasLastConnection(controller)) ...[
                         const SizedBox(width: 20),
                         SizedBox(
-                          height: 30,
-                          width: 30,
+                          height: 40,
+                          width: 40,
                           child: AnimatedRotation(
                             duration: const Duration(seconds: 5),
                             turns: controller.bt.connecting ? 8 : 0,
                             child: Material(
                               shape: const CircleBorder(),
-                              color: controller.bt.connecting ? Colors.black12 : Colors.black,
+                              color: controller.bt.connecting ? Colors.black12 : MyColors.green,
                               child: IconButton(
                                 padding: const EdgeInsets.all(0),
                                 onPressed: () => controller.bt.connectLastDevice(),
@@ -154,7 +153,6 @@ class HomePage extends StatelessWidget {
                               scrollWidget(controller, 'hora', 23),
                               scrollWidget(controller, 'min', 59),
                               scrollWidget(controller, 'seg', 59),
-                              scrollWidget(controller, 'miliseg', 999, step: 100),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -182,7 +180,7 @@ class HomePage extends StatelessWidget {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(MyColors.blue),
                       ),
-                      onPressed: () => controller.bt.sendString('x'),
+                      onPressed: () => controller.sendString('x'),
                       child: const Text(
                         'MUDAR ESTADO',
                         style: TextStyle(color: Colors.white),
@@ -260,5 +258,28 @@ class HomePage extends StatelessWidget {
         return ConnectBluetooth(ct: controller);
       },
     );
+  }
+
+  bool hasLastConnection(controller) {
+    return controller.bt.hasLastConnected() && !controller.bt.isConnected;
+  }
+
+  Color getButtonColor(HomeController controller) {
+    if (controller.bt.isConnected) {
+      return MyColors.yellow;
+    } else {
+      if (hasLastConnection(controller)) {
+        return MyColors.green.withOpacity(0.5);
+      }
+      return MyColors.green;
+    }
+  }
+
+  String getStringButton(HomeController controller) {
+    return controller.bt.isConnected ? Strings.desconectar : Strings.conectar;
+  }
+
+  Color getTextButtonColor(HomeController controller) {
+    return controller.bt.isConnected ? Colors.black : Colors.white;
   }
 }

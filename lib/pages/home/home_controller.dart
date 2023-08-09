@@ -16,7 +16,6 @@ class HomeController extends ChangeNotifier {
   int horas = 0;
   int minutos = 0;
   int segundos = 0;
-  int milisegundos = 0;
 
   HomeController(this.bt) {
     initReles();
@@ -86,8 +85,6 @@ class HomeController extends ChangeNotifier {
       minutos = time;
     } else if (type == 'seg') {
       segundos = time;
-    } else if (type == 'miliseg') {
-      milisegundos = time;
     }
     notifyListeners();
   }
@@ -98,7 +95,15 @@ class HomeController extends ChangeNotifier {
     time += horas * 3600000;
     time += minutos * 60000;
     time += segundos * 1000;
-    time += milisegundos;
     return time;
+  }
+
+  Future<void> sendString(String s) async {
+    if (!bt.isConnected) {
+      showMessageError('Bluetooth não conectado');
+      return;
+    }
+
+    await bt.sendString('x');
   }
 }
