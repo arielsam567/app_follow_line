@@ -17,7 +17,7 @@ class Routes {
       case splash:
         return wrapper(const SplashPage());
       case home:
-        return wrapper(const HomePage());
+        return wrapper(HomePage());
     }
     return null;
   }
