@@ -24,8 +24,7 @@ dependencies:
   permission_handler: ^10.4.3
   flutter_material_pickers: ^3.6.0
   wheel_chooser: ^1.1.2
-  direct_select: ^2.0.0
-
+  direct_select_flutter: ^1.1.1
 
 dev_dependencies:
   flutter_test:

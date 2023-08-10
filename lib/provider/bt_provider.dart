@@ -170,7 +170,7 @@ class BluetoothProvider extends ChangeNotifier {
       Future.delayed(Duration(milliseconds: milliseconds), () {
         debugPrint('RECEIVED $aux');
         lastAux = aux;
-        showMessageError(lastAux);
+        showMessageSuccess(lastAux);
         notifyListeners();
         aux = '';
       });
